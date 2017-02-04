@@ -4,6 +4,9 @@
   box-sizing: border-box;
 }
 .header{ height: 80px; line-height: 80px; background-color: #2196f3;}
-.header h2{ color: #fff; max-width: 1000px; margin: 0 auto;}
+.header h2{ color: #fff; max-width: 800px; margin: 0 auto;}
 .footer{ height: 150px;background-color: #2196f3;}
 .footer p{ text-align: center; color: #fff; line-height: 30px;}
+.personCon{ max-width: 800px; margin: 0 auto; }
+.personList{ width: 500px; margin: 0 auto; text-align: center; height: 30px; }
+.personList td{padding-left: 5px; padding-right: 5px;}

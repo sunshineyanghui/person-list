@@ -21564,6 +21564,10 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
+	var _Add = __webpack_require__(267);
+
+	var _Add2 = _interopRequireDefault(_Add);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var renderRoutes = function renderRoutes() {
@@ -21573,7 +21577,8 @@
 	    _react2.default.createElement(
 	      _reactRouter.Route,
 	      { path: '/', component: _App2.default },
-	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default })
+	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/Add', component: _Add2.default })
 	    )
 	  );
 	};
@@ -27004,6 +27009,10 @@
 
 	var _axios2 = _interopRequireDefault(_axios);
 
+	var _Add = __webpack_require__(267);
+
+	var _Add2 = _interopRequireDefault(_Add);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27021,7 +27030,8 @@
 	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
 
 	    _this.state = {
-	      persons: []
+	      persons: [],
+	      show: 0
 	    };
 	    return _this;
 	  }
@@ -27036,30 +27046,35 @@
 	      });
 	    }
 	  }, {
+	    key: 'handleClick',
+	    value: function handleClick() {
+	      this.setState({ show: true });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      // console.log(this.state.persons);
 	      var personList = this.state.persons.map(function (person, i) {
 	        return _react2.default.createElement(
-	          'div',
+	          'tr',
 	          { key: i },
 	          _react2.default.createElement(
-	            'span',
+	            'td',
 	            null,
 	            person.name
 	          ),
 	          _react2.default.createElement(
-	            'span',
+	            'td',
 	            null,
 	            person.age
 	          ),
 	          _react2.default.createElement(
-	            'span',
+	            'td',
 	            null,
 	            person.sex
 	          ),
 	          _react2.default.createElement(
-	            'span',
+	            'td',
 	            null,
 	            person.email
 	          )
@@ -27067,8 +27082,42 @@
 	      });
 	      return _react2.default.createElement(
 	        'div',
-	        null,
-	        personList
+	        { className: 'personCon' },
+	        _react2.default.createElement(
+	          'table',
+	          { className: 'personList' },
+	          _react2.default.createElement(
+	            'tr',
+	            null,
+	            _react2.default.createElement(
+	              'td',
+	              null,
+	              '\u59D3\u540D'
+	            ),
+	            _react2.default.createElement(
+	              'td',
+	              null,
+	              '\u5E74\u9F84'
+	            ),
+	            _react2.default.createElement(
+	              'td',
+	              null,
+	              '\u6027\u522B'
+	            ),
+	            _react2.default.createElement(
+	              'td',
+	              null,
+	              '\u90AE\u7BB1'
+	            )
+	          ),
+	          personList
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          { onClick: this.handleClick.bind(this) },
+	          '\u589E\u52A0\u65B0\u4EBA\u5458'
+	        ),
+	        this.state.show ? _react2.default.createElement(_Add2.default, null) : true
 	      );
 	    }
 	  }]);
@@ -28539,7 +28588,7 @@
 
 
 	// module
-	exports.push([module.id, "*{\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n.header{ height: 80px; line-height: 80px; background-color: #2196f3;}\n.header h2{ color: #fff; max-width: 1000px; margin: 0 auto;}\n.footer{ height: 150px;background-color: #2196f3;}\n.footer p{ text-align: center; color: #fff; line-height: 30px;}\n", ""]);
+	exports.push([module.id, "*{\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n.header{ height: 80px; line-height: 80px; background-color: #2196f3;}\n.header h2{ color: #fff; max-width: 800px; margin: 0 auto;}\n.footer{ height: 150px;background-color: #2196f3;}\n.footer p{ text-align: center; color: #fff; line-height: 30px;}\n.personCon{ max-width: 800px; margin: 0 auto; }\n.personList{ width: 500px; margin: 0 auto; text-align: center; height: 30px; }\n.personList td{padding-left: 5px; padding-right: 5px;}\n", ""]);
 
 	// exports
 
@@ -28850,6 +28899,144 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _axios = __webpack_require__(238);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Add = function (_React$Component) {
+	  _inherits(Add, _React$Component);
+
+	  function Add() {
+	    _classCallCheck(this, Add);
+
+	    return _possibleConstructorReturn(this, (Add.__proto__ || Object.getPrototypeOf(Add)).call(this));
+	  }
+
+	  _createClass(Add, [{
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      var _this2 = this;
+
+	      e.preventDefault();
+	      console.log('handleSubmit...');
+	      var name = this.refs.name.value;
+	      var age = this.refs.age.value;
+	      var sex = this.refs.sex.value;
+	      var email = this.refs.email.value;
+	      console.log({ name: name });
+	      _axios2.default.post('http://localhost:3000/persons', { name: name, age: age, sex: sex, email: email }).then(function (res) {
+	        console.log(res);
+	        // browserHistory.push('/');//添加完跳转到首页
+	        // this.context.router.push('/');
+	        _this2.props.router.push('/');
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          '\u6DFB\u52A0\u4EBA\u5458\u4FE1\u606F'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          null,
+	          '\xD7'
+	        ),
+	        _react2.default.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit.bind(this) },
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              '\u59D3\u540D'
+	            ),
+	            _react2.default.createElement('input', { type: 'text', name: 'name', ref: 'name' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              '\u5E74\u9F84'
+	            ),
+	            _react2.default.createElement('input', { type: 'text', name: 'age', ref: 'age' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              '\u6027\u522B'
+	            ),
+	            _react2.default.createElement('input', { type: 'text', ref: 'sex' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Email'
+	            ),
+	            _react2.default.createElement('input', { type: 'text', name: 'email', ref: 'email' })
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'submit' },
+	            '\u786E\u5B9A'
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'reset' },
+	            '\u53D6\u6D88'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Add;
+	}(_react2.default.Component);
+
+	Add.contextTypes = {
+	  router: _react2.default.PropTypes.object.isRequired
+	};
+	exports.default = Add;
 
 /***/ }
 /******/ ]);
