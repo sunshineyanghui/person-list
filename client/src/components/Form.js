@@ -1,8 +1,15 @@
 import React from 'react';
 import axios from 'axios';
-class Add extends React.Component{
+class Form extends React.Component{
   constructor(){
     super();
+    this.state={
+      show:false,
+      name:null,
+      age:null,
+      email:null,
+      sexValue:0
+    }
   }
   handleSubmit(e){
     e.preventDefault();
@@ -15,16 +22,24 @@ class Add extends React.Component{
     axios.post('http://localhost:3000/persons',{name,age,sex,email})
     .then( res =>  {
       console.log(res);
-      // browserHistory.push('/');//添加完跳转到首页
-      // this.context.router.push('/');
-      this.props.router.push('/')
     });
   }
+  handleShow(){
+    this.setState({
+      show:!this.state.show
+    })
+  }
   render(){
-    return(
-      <div>
-        <h2>添加人员信息</h2>
-        <button>×</button>
+    let content = this.state.show ?
+    <div className="customCover">
+
+      <div className="customForm">
+
+        <div className="clearfix">
+          <h2 className="pull-left">添加人员信息</h2>
+          <span className="glyphicon glyphicon-remove pull-right" onClick={this.handleShow.bind(this)}></span>
+        </div>
+
         <form onSubmit={this.handleSubmit.bind(this)}>
           <div>
             <label>姓名</label><input type="text" name="name" ref="name" />
@@ -37,15 +52,19 @@ class Add extends React.Component{
             <label>性别</label><input type="text" ref="sex"/>
           </div>
           <div>
-            <label>Email</label><input type="text" name="email" ref="email" />
+            <label>Email</label><input type="email" name="email" ref="email" />
           </div>
           <button type='submit'>确定</button><button type='reset'>取消</button>
         </form>
+
+      </div>
+
+    </div> :null
+    return(
+      <div>
+        {content}
       </div>
     )
   }
  }
- Add.contextTypes={
-   router:React.PropTypes.object.isRequired
- }
-export default Add;
+export default Form;
