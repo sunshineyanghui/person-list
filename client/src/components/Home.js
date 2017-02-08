@@ -23,7 +23,7 @@ class Home extends React.Component{
     // console.log(this.state.persons);
     return(
       <div className="personCon">
-        <table className="table table-hover">
+        <table className="table table-hover clearfix">
           <thead>
             <tr><td>姓名</td><td>年龄</td><td>性别</td><td>邮箱</td><td>操作</td></tr>
           </thead>
@@ -41,7 +41,10 @@ class Home extends React.Component{
             ))}
           </tbody>
         </table>
-        <button className="btn btn-default" type="submit" onClick={this.handleShow.bind(this)}>添加新成员</button>
+        <div className="clearfix">
+          <button className="btn btn-default pull-right" type="submit" onClick={this.handleShow.bind(this)}>添加新成员</button>
+        </div>
+
         <Form ref="form" />
       </div>
     )

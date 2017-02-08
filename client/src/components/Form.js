@@ -18,16 +18,30 @@ class Form extends React.Component{
     let age = this.refs.age.value;
     let sex = this.refs.sex.value;
     let email = this.refs.email.value;
-    console.log({name});
-    axios.post('http://localhost:3000/persons',{name,age,sex,email})
-    .then( res =>  {
-      console.log(res);
-    });
+    let postDate = { name,age,sex,email}
   }
   handleShow(){
     this.setState({
       show:!this.state.show
     })
+  }
+  handleBlur(e){
+    let _id = e.target.getAttribute('id');
+    let _target = document.getElementById(_id);
+    let _value = _target.value.trim();
+    if (_id === 'name') {
+      if (_value.length===0) {this.setState({name: '姓名不能为空'})}else { this.setState({name: null}) }
+    }
+    if (_id === 'age') {
+      if (Math.floor(_value) == _value && _value > 0) {this.setState({age:null})}else{ this.setState({age: '请输入一个大于0的整数'}) }
+    }
+    if(_id === 'email') {
+      let re= /\w@\w*\.\w/;
+      if (re.test(_value)) { this.setState({email: null}) }else { this.setState({email: '请输入正确的邮箱格式'}) }
+    }
+  }
+  handleChange(e){
+    this.setState({sexValue:e.target.value})
   }
   render(){
     let content = this.state.show ?
@@ -36,25 +50,30 @@ class Form extends React.Component{
       <div className="customForm">
 
         <div className="clearfix">
-          <h2 className="pull-left">添加人员信息</h2>
+          <h2 className="pull-left" style={{margin:'0'}}>添加人员信息</h2>
           <span className="glyphicon glyphicon-remove pull-right" onClick={this.handleShow.bind(this)}></span>
         </div>
 
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form className="form-horizontal" onSubmit={this.handleSubmit.bind(this)}>
           <div>
-            <label>姓名</label><input type="text" name="name" ref="name" />
+            <label>姓名</label><input onBlur={this.handleBlur.bind(this)} type="text" id="name" ref="name" />
           </div>
+          <p style={{color: 'red'}}>{this.state.name}</p>
           <div>
-            <label>年龄</label><input type="text" name="age" ref="age" />
+            <label>年龄</label><input onBlur={this.handleBlur.bind(this)} type="number" id="age" ref="age" />
           </div>
+          <p style={{color: 'red'}}>{this.state.age}</p>
           <div>
-            {/* <label>性别</label><input type="radio" value="男" name="sex" ref="mail" />男<input type="radio" value="女" name="sex" ref="remail" />女 */}
-            <label>性别</label><input type="text" ref="sex"/>
+            <label>性别</label>
+            <input type="radio" value="1" name="sex" id="male" onChange={this.handleChange.bind(this)} defaultChecked /><label>男</label>
+            <input type="radio" value="0" name="sex" id="female" onChange={this.handleChange.bind(this)}q /><label>女</label>
           </div>
+          <p style={{color: 'red'}}>{this.state.sex}</p>
           <div>
-            <label>Email</label><input type="email" name="email" ref="email" />
+            <label>Email</label><input type="email" id="email" ref="email" onBlur={this.handleBlur.bind(this)} />
           </div>
-          <button type='submit'>确定</button><button type='reset'>取消</button>
+          <p style={{color: 'red'}}>{this.state.email}</p>
+          <button type='submit' className="btn btn-default">确定</button><a className="btn btn-default">取消</a>
         </form>
 
       </div>

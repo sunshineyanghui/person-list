@@ -21790,7 +21790,7 @@
 	        { className: 'personCon' },
 	        _react2.default.createElement(
 	          'table',
-	          { className: 'table table-hover' },
+	          { className: 'table table-hover clearfix' },
 	          _react2.default.createElement(
 	            'thead',
 	            null,
@@ -21874,9 +21874,13 @@
 	          )
 	        ),
 	        _react2.default.createElement(
-	          'button',
-	          { className: 'btn btn-default', type: 'submit', onClick: this.handleShow.bind(this) },
-	          '\u6DFB\u52A0\u65B0\u6210\u5458'
+	          'div',
+	          { className: 'clearfix' },
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'btn btn-default pull-right', type: 'submit', onClick: this.handleShow.bind(this) },
+	            '\u6DFB\u52A0\u65B0\u6210\u5458'
+	          )
 	        ),
 	        _react2.default.createElement(_Form2.default, { ref: 'form' })
 	      );
@@ -23717,10 +23721,7 @@
 	      var age = this.refs.age.value;
 	      var sex = this.refs.sex.value;
 	      var email = this.refs.email.value;
-	      console.log({ name: name });
-	      _axios2.default.post('http://localhost:3000/persons', { name: name, age: age, sex: sex, email: email }).then(function (res) {
-	        console.log(res);
-	      });
+	      var postDate = { name: name, age: age, sex: sex, email: email };
 	    }
 	  }, {
 	    key: 'handleShow',
@@ -23728,6 +23729,40 @@
 	      this.setState({
 	        show: !this.state.show
 	      });
+	    }
+	  }, {
+	    key: 'handleBlur',
+	    value: function handleBlur(e) {
+	      var _id = e.target.getAttribute('id');
+	      var _target = document.getElementById(_id);
+	      var _value = _target.value.trim();
+	      if (_id === 'name') {
+	        if (_value.length === 0) {
+	          this.setState({ name: '姓名不能为空' });
+	        } else {
+	          this.setState({ name: null });
+	        }
+	      }
+	      if (_id === 'age') {
+	        if (Math.floor(_value) == _value && _value > 0) {
+	          this.setState({ age: null });
+	        } else {
+	          this.setState({ age: '请输入一个大于0的整数' });
+	        }
+	      }
+	      if (_id === 'email') {
+	        var re = /\w@\w*\.\w/;
+	        if (re.test(_value)) {
+	          this.setState({ email: null });
+	        } else {
+	          this.setState({ email: '请输入正确的邮箱格式' });
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+	      this.setState({ sexValue: e.target.value });
 	    }
 	  }, {
 	    key: 'render',
@@ -23743,14 +23778,14 @@
 	            { className: 'clearfix' },
 	            _react2.default.createElement(
 	              'h2',
-	              { className: 'pull-left' },
+	              { className: 'pull-left', style: { margin: '0' } },
 	              '\u6DFB\u52A0\u4EBA\u5458\u4FE1\u606F'
 	            ),
 	            _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove pull-right', onClick: this.handleShow.bind(this) })
 	          ),
 	          _react2.default.createElement(
 	            'form',
-	            { onSubmit: this.handleSubmit.bind(this) },
+	            { className: 'form-horizontal', onSubmit: this.handleSubmit.bind(this) },
 	            _react2.default.createElement(
 	              'div',
 	              null,
@@ -23759,7 +23794,12 @@
 	                null,
 	                '\u59D3\u540D'
 	              ),
-	              _react2.default.createElement('input', { type: 'text', name: 'name', ref: 'name' })
+	              _react2.default.createElement('input', { onBlur: this.handleBlur.bind(this), type: 'text', id: 'name', ref: 'name' })
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.name
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -23769,7 +23809,12 @@
 	                null,
 	                '\u5E74\u9F84'
 	              ),
-	              _react2.default.createElement('input', { type: 'text', name: 'age', ref: 'age' })
+	              _react2.default.createElement('input', { onBlur: this.handleBlur.bind(this), type: 'number', id: 'age', ref: 'age' })
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.age
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -23779,7 +23824,23 @@
 	                null,
 	                '\u6027\u522B'
 	              ),
-	              _react2.default.createElement('input', { type: 'text', ref: 'sex' })
+	              _react2.default.createElement('input', { type: 'radio', value: '1', name: 'sex', id: 'male', onChange: this.handleChange.bind(this), defaultChecked: true }),
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                '\u7537'
+	              ),
+	              _react2.default.createElement('input', { type: 'radio', value: '0', name: 'sex', id: 'female', onChange: this.handleChange.bind(this), q: true }),
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                '\u5973'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.sex
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -23789,16 +23850,21 @@
 	                null,
 	                'Email'
 	              ),
-	              _react2.default.createElement('input', { type: 'email', name: 'email', ref: 'email' })
+	              _react2.default.createElement('input', { type: 'email', id: 'email', ref: 'email', onBlur: this.handleBlur.bind(this) })
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.email
 	            ),
 	            _react2.default.createElement(
 	              'button',
-	              { type: 'submit' },
+	              { type: 'submit', className: 'btn btn-default' },
 	              '\u786E\u5B9A'
 	            ),
 	            _react2.default.createElement(
-	              'button',
-	              { type: 'reset' },
+	              'a',
+	              { className: 'btn btn-default' },
 	              '\u53D6\u6D88'
 	            )
 	          )
