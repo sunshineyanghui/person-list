@@ -21739,11 +21739,13 @@
 
 	var _axios2 = _interopRequireDefault(_axios);
 
-	var _Form = __webpack_require__(212);
+	var _Form = __webpack_require__(207);
 
 	var _Form2 = _interopRequireDefault(_Form);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -21771,19 +21773,62 @@
 	    value: function componentWillMount() {
 	      var _this2 = this;
 
-	      _axios2.default.get('http://localhost:3000/persons').then(function (res) {
+	      _axios2.default.get('http://localhost:3000/all').then(function (res) {
 	        return _this2.setState({ persons: res.data.persons });
 	      });
 	    }
 	  }, {
 	    key: 'handleShow',
-	    value: function handleShow() {
-	      this.setState({});
+	    value: function handleShow(num) {
+	      this.setState({ type: num });
 	      this.refs.form.handleShow();
+	    }
+	  }, {
+	    key: 'handleRemove',
+	    value: function handleRemove(_id) {
+	      var _this3 = this;
+
+	      var r = confirm("确定要删除该人员信息吗？");
+	      if (r) {
+	        _axios2.default.delete('http://localhost:3000/del/' + _id).then(function (res) {
+	          alert(res.data.status);
+	          var newList = _this3.state.data.filter(function (person) {
+	            return person._id !== _id;
+	          });
+	          _this3.setState({ data: newList });
+	        }).catch(function (err) {
+	          return alert('删除失败');
+	        });
+	      } else {
+	        alert('取消删除');
+	      }
+	    }
+	  }, {
+	    key: 'editPerson',
+	    value: function editPerson(data, type) {
+	      var _this4 = this;
+
+	      if (type === 0) {
+	        _axios2.default.post('http://localhost:3000/add', data).then(function (res) {
+	          _this4.setState({ persons: [].concat(_toConsumableArray(_this4.state.persons), [res.data.persons]) });
+	          _this4.refs.form.handleShow();
+	        });
+	      } else {
+	        _axios2.default.put('http://localhost:3000/edit/' + type, data).then(function (res) {
+	          var index = _this4.state.persons.findIndex(function (person) {
+	            return person._id === type;
+	          });
+	          // console.log(res.data.person);
+	          _this4.setState({ persons: [].concat(_toConsumableArray(_this4.state.data.slice(0, index)), [Object.assign({}, res.data.persons, data)], _toConsumableArray(_this4.state.data.slice(index + 1))) });
+	          _this4.refs.form.handleShow();
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this5 = this;
+
 	      // console.log(this.state.persons);
 	      return _react2.default.createElement(
 	        'div',
@@ -21844,7 +21889,7 @@
 	                _react2.default.createElement(
 	                  'td',
 	                  null,
-	                  person.sex
+	                  person.sex === 0 ? '男' : '女'
 	                ),
 	                _react2.default.createElement(
 	                  'td',
@@ -21859,12 +21904,12 @@
 	                    { className: 'action' },
 	                    _react2.default.createElement(
 	                      'button',
-	                      { className: 'btn btn-default', type: 'submit' },
+	                      { className: 'btn btn-default', type: 'submit', onClick: _this5.handleShow.bind(_this5, person._id) },
 	                      '\u4FEE\u6539'
 	                    ),
 	                    _react2.default.createElement(
 	                      'button',
-	                      { className: 'btn btn-default', type: 'submit' },
+	                      { className: 'btn btn-default', type: 'submit', onClick: _this5.handleRemove.bind(_this5, person._id) },
 	                      '\u5220\u9664'
 	                    )
 	                  )
@@ -21878,11 +21923,11 @@
 	          { className: 'clearfix' },
 	          _react2.default.createElement(
 	            'button',
-	            { className: 'btn btn-default pull-right', type: 'submit', onClick: this.handleShow.bind(this) },
+	            { className: 'btn btn-default pull-right', type: 'submit', onClick: this.handleShow.bind(this, 0) },
 	            '\u6DFB\u52A0\u65B0\u6210\u5458'
 	          )
 	        ),
-	        _react2.default.createElement(_Form2.default, { ref: 'form' })
+	        _react2.default.createElement(_Form2.default, { ref: 'form', type: this.state.type, action: this.editPerson.bind(this) })
 	      );
 	    }
 	  }]);
@@ -23319,7 +23364,224 @@
 	};
 
 /***/ },
-/* 207 */,
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _axios = __webpack_require__(182);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Form = function (_React$Component) {
+	  _inherits(Form, _React$Component);
+
+	  function Form() {
+	    _classCallCheck(this, Form);
+
+	    var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this));
+
+	    _this.state = {
+	      show: false,
+	      name: null,
+	      age: null,
+	      email: null,
+	      sexValue: 0
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Form, [{
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	      console.log('handleSubmit...');
+	      var name = this.refs.name.value;
+	      var age = this.refs.age.value;
+	      var sex = this.state.sexValue;
+	      var email = this.refs.email.value;
+	      var postDate = { name: name, age: age, sex: sex, email: email };
+	      this.props.action(postDate, this.props.type);
+	    }
+	  }, {
+	    key: 'handleShow',
+	    value: function handleShow() {
+	      this.setState({
+	        show: !this.state.show
+	      });
+	    }
+	  }, {
+	    key: 'handleBlur',
+	    value: function handleBlur(e) {
+	      var _id = e.target.getAttribute('id');
+	      var _target = document.getElementById(_id);
+	      var _value = _target.value.trim();
+	      if (_id === 'name') {
+	        if (_value.length === 0) {
+	          this.setState({ name: '姓名不能为空' });
+	        } else {
+	          this.setState({ name: null });
+	        }
+	      }
+	      if (_id === 'age') {
+	        if (Math.floor(_value) == _value && _value > 0) {
+	          this.setState({ age: null });
+	        } else {
+	          this.setState({ age: '请输入一个大于0的整数' });
+	        }
+	      }
+	      if (_id === 'email') {
+	        var re = /\w@\w*\.\w/;
+	        if (re.test(_value)) {
+	          this.setState({ email: null });
+	        } else {
+	          this.setState({ email: '请输入正确的邮箱格式' });
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+	      this.setState({ sexValue: e.target.value });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var content = this.state.show ? _react2.default.createElement(
+	        'div',
+	        { className: 'customCover' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'customForm' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'clearfix' },
+	            _react2.default.createElement(
+	              'h2',
+	              { className: 'pull-left', style: { margin: '0' } },
+	              this.props.type == 0 ? '添加成员信息' : '修改成员信息'
+	            ),
+	            _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove pull-right', onClick: this.handleShow.bind(this) })
+	          ),
+	          _react2.default.createElement(
+	            'form',
+	            { className: 'form-horizontal', onSubmit: this.handleSubmit.bind(this) },
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                '\u59D3\u540D'
+	              ),
+	              _react2.default.createElement('input', { onBlur: this.handleBlur.bind(this), type: 'text', id: 'name', ref: 'name' })
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.name
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                '\u5E74\u9F84'
+	              ),
+	              _react2.default.createElement('input', { onBlur: this.handleBlur.bind(this), type: 'number', id: 'age', ref: 'age' })
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.age
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                '\u6027\u522B'
+	              ),
+	              _react2.default.createElement('input', { type: 'radio', value: '0', name: 'sex', id: 'male', onChange: this.handleChange.bind(this), defaultChecked: true }),
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'male' },
+	                '\u7537'
+	              ),
+	              _react2.default.createElement('input', { type: 'radio', value: '1', name: 'sex', id: 'female', onChange: this.handleChange.bind(this) }),
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'female' },
+	                '\u5973'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.sex
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Email'
+	              ),
+	              _react2.default.createElement('input', { type: 'email', id: 'email', ref: 'email', onBlur: this.handleBlur.bind(this) })
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { style: { color: 'red' } },
+	              this.state.email
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'submit', className: 'btn btn-default' },
+	              '\u786E\u5B9A'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'btn btn-default', onClick: this.handleShow.bind(this), role: 'button' },
+	              '\u53D6\u6D88'
+	            )
+	          )
+	        )
+	      ) : null;
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        content
+	      );
+	    }
+	  }]);
+
+	  return Form;
+	}(_react2.default.Component);
+
+	exports.default = Form;
+
+/***/ },
 /* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -23665,223 +23927,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 212 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _axios = __webpack_require__(182);
-
-	var _axios2 = _interopRequireDefault(_axios);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Form = function (_React$Component) {
-	  _inherits(Form, _React$Component);
-
-	  function Form() {
-	    _classCallCheck(this, Form);
-
-	    var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this));
-
-	    _this.state = {
-	      show: false,
-	      name: null,
-	      age: null,
-	      email: null,
-	      sexValue: 0
-	    };
-	    return _this;
-	  }
-
-	  _createClass(Form, [{
-	    key: 'handleSubmit',
-	    value: function handleSubmit(e) {
-	      e.preventDefault();
-	      console.log('handleSubmit...');
-	      var name = this.refs.name.value;
-	      var age = this.refs.age.value;
-	      var sex = this.refs.sex.value;
-	      var email = this.refs.email.value;
-	      var postDate = { name: name, age: age, sex: sex, email: email };
-	    }
-	  }, {
-	    key: 'handleShow',
-	    value: function handleShow() {
-	      this.setState({
-	        show: !this.state.show
-	      });
-	    }
-	  }, {
-	    key: 'handleBlur',
-	    value: function handleBlur(e) {
-	      var _id = e.target.getAttribute('id');
-	      var _target = document.getElementById(_id);
-	      var _value = _target.value.trim();
-	      if (_id === 'name') {
-	        if (_value.length === 0) {
-	          this.setState({ name: '姓名不能为空' });
-	        } else {
-	          this.setState({ name: null });
-	        }
-	      }
-	      if (_id === 'age') {
-	        if (Math.floor(_value) == _value && _value > 0) {
-	          this.setState({ age: null });
-	        } else {
-	          this.setState({ age: '请输入一个大于0的整数' });
-	        }
-	      }
-	      if (_id === 'email') {
-	        var re = /\w@\w*\.\w/;
-	        if (re.test(_value)) {
-	          this.setState({ email: null });
-	        } else {
-	          this.setState({ email: '请输入正确的邮箱格式' });
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'handleChange',
-	    value: function handleChange(e) {
-	      this.setState({ sexValue: e.target.value });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var content = this.state.show ? _react2.default.createElement(
-	        'div',
-	        { className: 'customCover' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'customForm' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'clearfix' },
-	            _react2.default.createElement(
-	              'h2',
-	              { className: 'pull-left', style: { margin: '0' } },
-	              '\u6DFB\u52A0\u4EBA\u5458\u4FE1\u606F'
-	            ),
-	            _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove pull-right', onClick: this.handleShow.bind(this) })
-	          ),
-	          _react2.default.createElement(
-	            'form',
-	            { className: 'form-horizontal', onSubmit: this.handleSubmit.bind(this) },
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                '\u59D3\u540D'
-	              ),
-	              _react2.default.createElement('input', { onBlur: this.handleBlur.bind(this), type: 'text', id: 'name', ref: 'name' })
-	            ),
-	            _react2.default.createElement(
-	              'p',
-	              { style: { color: 'red' } },
-	              this.state.name
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                '\u5E74\u9F84'
-	              ),
-	              _react2.default.createElement('input', { onBlur: this.handleBlur.bind(this), type: 'number', id: 'age', ref: 'age' })
-	            ),
-	            _react2.default.createElement(
-	              'p',
-	              { style: { color: 'red' } },
-	              this.state.age
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                '\u6027\u522B'
-	              ),
-	              _react2.default.createElement('input', { type: 'radio', value: '1', name: 'sex', id: 'male', onChange: this.handleChange.bind(this), defaultChecked: true }),
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                '\u7537'
-	              ),
-	              _react2.default.createElement('input', { type: 'radio', value: '0', name: 'sex', id: 'female', onChange: this.handleChange.bind(this), q: true }),
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                '\u5973'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'p',
-	              { style: { color: 'red' } },
-	              this.state.sex
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Email'
-	              ),
-	              _react2.default.createElement('input', { type: 'email', id: 'email', ref: 'email', onBlur: this.handleBlur.bind(this) })
-	            ),
-	            _react2.default.createElement(
-	              'p',
-	              { style: { color: 'red' } },
-	              this.state.email
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'submit', className: 'btn btn-default' },
-	              '\u786E\u5B9A'
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'btn btn-default' },
-	              '\u53D6\u6D88'
-	            )
-	          )
-	        )
-	      ) : null;
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        content
-	      );
-	    }
-	  }]);
-
-	  return Form;
-	}(_react2.default.Component);
-
-	exports.default = Form;
 
 /***/ }
 /******/ ]);

@@ -4,9 +4,9 @@ var Schema = mongoose.Schema;
 const PostSchema = new Schema(
   {
     name: { type: String },
-    age: { type: String},
-    sex:{ type:String },
-    email:{ type:String }
+    age: { type: Number},
+    sex:{ type: Number },
+    email:{ type: String }
   }
 );
 
