@@ -4,8 +4,6 @@
 .footer{ height: 150px;background-color: #2196f3;}
 .footer p{ text-align: center; color: #fff; line-height: 30px;}
 .personCon{ max-width: 800px; margin: 0 auto; margin-top: 30px;}
-.personList{ width: 500px; margin: 0 auto; text-align: center; height: 30px; }
-.personList td{padding-left: 5px; padding-right: 5px;}
 .action{ opacity: 0;}
 .action:hover{ opacity: 1;}
 .customCover{position: absolute;top: 0;bottom: 0;left: 0;right: 0;background-color: rgba(0, 0, 0, 0.4);}

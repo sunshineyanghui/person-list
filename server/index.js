@@ -7,7 +7,6 @@ app.use(cors());
 app.use(bodyParser.json());
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/person');
-
 var db = mongoose.connection;
 
 db.once('open', function(){
@@ -21,20 +20,20 @@ db.on('error',function (err) {
 });//on当什么时候 当报错的时候
 //首页展示所有person
 app.get('/all', function(req,res){
-  Person.find().exec(function(err, persons) {
-    res.json({persons})
+  Person.find().exec(function(err, people) {
+    res.json({people})
   });
 })
 //向数据库添加一条
 app.post('/add',function (req,res) {
-  res.json(req.body)
   let name = req.body.name;
   let age = req.body.age;
   let sex = req.body.sex;
   let email = req.body.email;
   const person = new Person({name: name, age: age,sex:sex,email:email});
-  person.save(function(){
-    console.log('saved!');
+  person.save(function(err, person){
+    // console.log('saved!');
+    res.json({person})
   });
 })
 //删除

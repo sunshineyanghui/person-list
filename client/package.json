@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": " ./node_modules/.bin/webpack -w",
+    "build": " ./node_modules/.bin/webpack -w -d",
     "start": "node devServer.js"
   },
   "author": "",

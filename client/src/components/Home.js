@@ -5,13 +5,14 @@ class Home extends React.Component{
   constructor(){
     super();
     this.state = {
-      persons: [],
-      show:0
+      data: [],
+      // type 状态用来控制表单具体是新增还是修改，0是新增，其他均为_id
+      type: null
     };
   }
   componentWillMount() {
     axios.get('http://localhost:3000/all')
-    .then((res) => this.setState({persons:res.data.persons}))
+    .then((res) => this.setState({data:res.data.people}))
   }
   handleShow(num){
     this.setState({type: num})
@@ -36,21 +37,22 @@ class Home extends React.Component{
 
   editPerson(data,type){
     if (type===0) {
-      axios.post('http://localhost:3000/add',data)
+      axios.post(`http://localhost:3000/add`,data)
         .then( res => {
-          this.setState({persons: [...this.state.persons,res.data.persons]})
+          console.log(res.data);
+          this.setState({data: [...this.state.data,res.data.person]})
           this.refs.form.handleShow()
         })
     }else {
       axios.put(`http://localhost:3000/edit/${type}`,data)
         .then( res => {
-          let index = this.state.persons.findIndex(function (person) {
+          let index = this.state.data.findIndex(function (person) {
             return person._id === type;
           })
           // console.log(res.data.person);
-          this.setState({persons: [
+          this.setState({data: [
             ...this.state.data.slice(0,index),
-            Object.assign({}, res.data.persons, data),
+            Object.assign({}, res.data.person, data),
             ...this.state.data.slice(index+1)]});
           this.refs.form.handleShow();
         })
@@ -66,16 +68,16 @@ class Home extends React.Component{
             <tr><td>姓名</td><td>年龄</td><td>性别</td><td>邮箱</td><td>操作</td></tr>
           </thead>
           <tbody>
-            {this.state.persons.map((person,i)=>(
-              <tr key={i}>
-                <td>{person.name}</td>
-                <td>{person.age}</td>
-                <td>{person.sex=== 0 ? '男' : '女'}</td>
-                <td>{person.email}</td>
+            {this.state.data.map((item)=>(
+              <tr key={item._id}>
+                <td>{item.name}</td>
+                <td>{item.age}</td>
+                <td>{item.sex=== 0 ? '男' : '女'}</td>
+                <td>{item.email}</td>
                 <td>
                   <div className="action">
-                    <button className="btn btn-default" type="submit" onClick={this.handleShow.bind(this,person._id)}>修改</button>
-                     <button className="btn btn-default" type="submit" onClick={this.handleRemove.bind(this,person._id)}>删除</button>
+                    <button className="btn btn-default" type="submit" onClick={this.handleShow.bind(this,item._id)}>修改</button>
+                     <button className="btn btn-default" type="submit" onClick={this.handleRemove.bind(this,item._id)}>删除</button>
                   </div>
                 </td>
               </tr>
